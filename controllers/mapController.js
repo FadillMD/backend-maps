@@ -1,5 +1,21 @@
 // controllers/mapController.js
 const Map = require('../models/Map');
+const LocationView = require('../controllers/locationView');
+
+const getLocationDetails = async (req, res) => {
+  const { lat, lng } = req.body;
+  const apiKey = 'AIzaSyA7z8qz40pOrKASz_H6L9jHU3lf4w2U-5U';
+
+  try {
+    const locationDetails = await Map.getLocationDetails(lat, lng, apiKey);
+    // res.json(locationDetails);
+    LocationView.renderLocationDetails(res, locationDetails);
+  } catch (error) {
+    console.error('Error in controller:', error);
+    LocationView.renderError(res, 'Internal Server Error');
+    // res.status(500).json({ error: 'Internal Server Error' });
+  }
+}
 
 const addMapData = async (req, res) => {
   try {
@@ -30,4 +46,6 @@ const getMapDataById = async (req, res) => {
   }
 };
 
-module.exports = { addMapData, getMapData, getMapDataById };
+
+
+module.exports = { addMapData, getMapData, getMapDataById, getLocationDetails };

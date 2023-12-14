@@ -53,17 +53,20 @@ class Map {
     }
   }
 
-  static async getLocationDetails(lat, lng) {
+  static async getLocationDetails(lat, lng, apiKey) {
     try {
-      const apiKey = 'AIzaSyA7z8qz40pOrKASz_H6L9jHU3lf4w2U-5U';
-      const response = await axios.get(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey}`
+          const apiKey = 'AIzaSyA7z8qz40pOrKASz_H6L9jHU3lf4w2U-5U';
+          const response = await axios.get(
+          `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey}`
       );
 
       const place = response.data.results[0];
       const locationDetails = {
-        address: place.formatted_address,
-        snippet: place.types && place.types.length > 0 ? place.types[0] : '',
+        address: place.formatted_address || '',
+        latitude: lat,
+        longitude: lng,
+        state: getLocationComponent(place, 'administrative_area_level_1'),
+        country: getLocationComponent(place, 'country'),
       };
 
       return locationDetails;
@@ -72,6 +75,15 @@ class Map {
       throw error;
     }
   }
+  
+}
+// Helper function to get location component by type
+function getLocationComponent(place, type) {
+  const component = place.address_components.find((component) =>
+    component.types.includes(type)
+  );
+
+  return component ? component.long_name : '';
 }
 
 module.exports = Map;
