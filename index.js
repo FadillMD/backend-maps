@@ -1,17 +1,20 @@
+'use strict';
+
 const express = require('express');
+const cors = require('cors');
 const bodyParser = require('body-parser');
-const apiRoutes = require('./src/routes/apiRoutes');
+const config = require('./config');
+
+const userRoutes = require('./src/routes/api');
 
 const app = express();
-const port = process.env.PORT || 3000;
 
-// Middleware
+app.use(express.json());
+app.use(cors());
 app.use(bodyParser.json());
 
-// Routes
-app.use('/api', apiRoutes);
+app.use('/api', userRoutes.routes);
 
-// Start Server
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+
+
+app.listen(config.port, () => console.log('App is listening on url http://localhost:' + config.port));
