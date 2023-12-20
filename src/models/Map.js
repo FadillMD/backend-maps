@@ -1,17 +1,13 @@
 // models/Map.js
-const firestore = require('../firebaseConfig');
+const firestore = require('../../firebaseConfig');
 const axios = require('axios');
 const admin = require('firebase-admin'); // Import the admin object
 
 class Map {
-  constructor({ id, title, lat, lng, address, snippet }) {
+  constructor({ id, lat, lng }) {
     this.id = id;
-    this.title = title;
     this.lat = lat;
     this.lng = lng;
-    this.address = address;
-    this.created_at = admin.firestore.FieldValue.serverTimestamp();
-    this.snippet = snippet;
   }
 
   static async addMapData(data) {
@@ -53,7 +49,7 @@ class Map {
     }
   }
 
-  static async getLocationDetails(lat, lng, apiKey) {
+  static async getLocationDetails(lat, lng ) {
     try {
           const apiKey = 'AIzaSyA7z8qz40pOrKASz_H6L9jHU3lf4w2U-5U';
           const response = await axios.get(
